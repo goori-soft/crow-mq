@@ -1,0 +1,16 @@
+@startuml Scheduled Queue
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+AddRelTag("async", $lineStyle = DashedLine())
+AddRelTag("future", $lineColor = "#1b6b13", $textColor = "#1b6b13")
+AddRelTag("remove", $lineColor = "#8f622b", $textColor = "#8f622b")
+AddElementTag("future", $bgColor = "#32a852", $borderColor = "#2a8222")
+AddElementTag("remove", $bgColor = "#f0b267", $borderColor = "#8f622b")
+
+System_Ext(publisher, "Publisher", "External system to publishe a scheduled message")
+System_Ext(consumer, "Consumer", "External system that consumes a scheduled message")
+System(sQueue, "SQueue", "Scheduled Queue")
+
+Rel(publisher, sQueue, "Publish a message", "HTTP")
+Rel(sQueue, consumer, "Send a message to a consumer", "HTTP")
+@enduml
