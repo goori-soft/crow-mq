@@ -5,13 +5,11 @@ import { TextInput } from "./TextInput";
 
 export class Group{
   private readonly name: string
-  private readonly consumerSet: Set<Consumer>
-  private pointer: number
+  private readonly consumerSet: Set<Consumer> = new Set()
+  private pointer: number = -1
 
   constructor(options: GroupOptions){
     this.name = new TextInput(options.name, 'Group name').notBlank().getValue()
-    this.consumerSet = new Set()
-    this.pointer = -1
   }
 
   push(consumer: Consumer): Group{
@@ -29,7 +27,7 @@ export class Group{
 
   notify(message: Message): Group{
     if(this.consumerSet.size <= 0) return this
-    const pointer = this.increasePointer()
+    this.increasePointer()
     const consumer = this.getCurrentConsumer()
     if(consumer !== undefined) consumer.send(message)
     return this
@@ -37,12 +35,16 @@ export class Group{
 
   private increasePointer(): number{
     this.pointer++
-    if(this.pointer > this.consumerSet.size) this.pointer = 0
+    if(this.pointer >= this.consumerSet.size) this.pointer = 0
     return this.pointer
   }
 
   private getCurrentConsumer(): Consumer | undefined{
     if(this.pointer < 0) return undefined
     return [...this.consumerSet][this.pointer]
+  }
+
+  getName(): string{
+    return this.name
   }
 }

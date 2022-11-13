@@ -10,6 +10,7 @@ describe("Message entity", ()=>{
     expect(message.getId()).toEqual(expect.any(String))
     expect(message.getTopic()).toBe(undefined)
     expect(message.isExpired()).toBe(false)
+    expect(message.getDeliveryDelay()).toBe(0)
   })
 
   it('Should return the delay to delivery', ()=>{

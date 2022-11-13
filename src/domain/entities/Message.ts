@@ -5,12 +5,12 @@ export class Message{
   private readonly id: string
   private readonly body: Buffer
   private readonly topicName?: TopicName
-  private readonly deliveryDate?: Date
+  private readonly deliveryDate: Date
   private readonly expiryDate?: Date
 
   constructor(body: string | Buffer, options?: MessageOptions){
     this.topicName = options?.topicName
-    this.deliveryDate = options?.deliveryDate ? new Date(options?.deliveryDate) : undefined
+    this.deliveryDate = options?.deliveryDate ? new Date(options.deliveryDate) : new Date()
     this.expiryDate = options?.expiryDate ? new Date(options.expiryDate) : undefined
     this.body = Buffer.from(body)
     this.id = uuid()
@@ -29,14 +29,13 @@ export class Message{
   }
 
   isExpired(): boolean{
-    const NOW = new Date()
     if(this.expiryDate === undefined) return false
+    const NOW = new Date()
     if(this.expiryDate < NOW) return false
     return true
   }
 
   getDeliveryDelay(): number {
-    if(this.deliveryDate === undefined) return 0
     const now = new Date().getTime()
     const deliveryTime = this.deliveryDate.getTime()
     const delay = deliveryTime - now

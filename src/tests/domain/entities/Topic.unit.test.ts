@@ -2,7 +2,6 @@ import { Message, Queue, Topic } from '@/domain/entities'
 import { TopicAlreadyExists } from '@/domain/errors/TopicAlreadyExists'
 import { makeSilentConsumer } from '@/tests/mock/makeSilentConsumer.mock'
 import { sleep } from '@/tests/sleep'
-import exp from 'constants'
 describe("Topic entity", ()=>{
 
   beforeEach(()=>{
@@ -45,16 +44,21 @@ describe("Topic entity", ()=>{
     expect(topic1).toBe(topic2)
   })
 
-  it('Should insert a new consumer', async ()=>{
+  it('Should insert and notify a new consumer', async ()=>{
+    const NEXT = new Date( new Date().getTime() + 1000)
     const topicName = 'myTopic'
     const groupName = 'myGroup'
     const topic = Topic.create({topicName})
-    const message = new Message('hello')
+    const message1 = new Message('hello')
+    const message2 = new Message('hi', {deliveryDate: NEXT})
     const consumer = makeSilentConsumer()
     topic.attachConsumer(consumer, groupName)
     
-    topic.queue.push(message)
+    topic.queue.push(message1)
+    topic.queue.push(message2)
     await sleep(50)
     expect(consumer.send).toHaveBeenCalledTimes(1)
+    await sleep(1000)
+    expect(consumer.send).toHaveBeenCalledTimes(2)
   })
 })

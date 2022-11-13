@@ -1,1 +1,1 @@
-# Scheduled Queue
+# Crow Message Queue (crow-mq)

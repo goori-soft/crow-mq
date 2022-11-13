@@ -73,7 +73,6 @@ export class Queue{
     const delivery = ()=>{
       this.notify(Queue.Events.MESSAGE_DELIVERY, message)
     }
-    const now = new Date().getTime()
     const delay =  message.getDeliveryDelay()
     const timeout = setTimeout(delivery, delay)
     const scheduledDelivery: ScheduledDelivery = {

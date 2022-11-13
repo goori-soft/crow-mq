@@ -4,6 +4,7 @@ import { TopicAlreadyExists } from "@/domain/errors";
 import { Queue } from './Queue'
 import { Group } from "./Group";
 import { Message } from ".";
+import { v4 as uuid } from 'uuid';
 
 const topicMemory: Map<TopicName, Topic> = new Map()
 
@@ -23,7 +24,8 @@ export class Topic{
     })
   }
 
-  attachConsumer(consumer: Consumer, groupName: string): void {
+  attachConsumer(consumer: Consumer, groupName?: string): void {
+    if(groupName === undefined) groupName = uuid()
     const group = this.getGroupByName(groupName)
     group.push(consumer)
   }
@@ -39,7 +41,9 @@ export class Topic{
 
   private notifyGroups(message: Message | undefined): void{
     if(message === undefined) return
-    for(let group of this.groupSet) group.notify(message)
+    for(let group of this.groupSet){
+      group.notify(message)
+    }
   }
 
   static clear(): void{

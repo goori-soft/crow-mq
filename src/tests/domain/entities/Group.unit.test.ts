@@ -2,7 +2,6 @@ import { Message } from "@/domain/entities"
 import { Group } from "@/domain/entities/Group"
 import { InvalidTextInput } from "@/domain/errors"
 import { makeSilentConsumer } from "@/tests/mock/makeSilentConsumer.mock"
-import exp from "constants"
 
 describe("Group entity", ()=>{
   it("Should create a new group of consumers", ()=>{
@@ -21,7 +20,7 @@ describe("Group entity", ()=>{
     }).toThrowError(InvalidTextInput)
   })
 
-  it('Should insert a new consumer and notify', ()=>{
+  it('Should insert a new consumer and notify it', ()=>{
     const consumer = makeSilentConsumer()
     const message = new Message('Hello')
     const group = new Group({ name: 'myGroup' })
